@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#285b48">
+  <title>Kartenvorschau – Tumas von Domat/Ems</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <style>
+    *{box-sizing:border-box}
+    :root{--forest:#285b48;--deep:#183d32;--sage:#e5ecdf;--ink:#25342d;--muted:#64736a;--border:#dfe6dc}
+    body{margin:0;background:#f7f8f3;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45}
+    main{max-width:1200px;margin:auto;padding:20px clamp(12px,3vw,28px) 28px}
+    header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:14px}
+    h1{font-size:clamp(1.35rem,3vw,2rem);line-height:1.15;color:var(--deep);margin:0 0 6px}
+    header p{margin:0;color:var(--muted);max-width:760px}
+    .draft{display:inline-block;flex:0 0 auto;padding:7px 11px;border-radius:999px;background:#fff2d9;color:#77521b;font-size:.82rem;font-weight:800}
+    .map-shell{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:#e8eee5;box-shadow:0 8px 24px #183d3210}
+    #map{height:min(66vh,690px);min-height:400px;width:100%}
+    .legend{margin-top:16px;background:white;border:1px solid var(--border);border-radius:16px;padding:14px}
+    .legend-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px}
+    h2{font-size:1.05rem;color:var(--deep);margin:0}
+    .legend-head p{font-size:.82rem;color:var(--muted);margin:0}
+    .points{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .point{display:flex;align-items:center;gap:9px;min-width:0;text-align:left;border:1px solid #e1e8df;border-radius:11px;padding:8px;background:#fff;color:var(--ink);cursor:pointer;font:inherit}
+    .point:hover,.point.active{border-color:#6f977b;background:#f2f7ef}
+    .num{display:grid;place-items:center;flex:0 0 26px;height:26px;border-radius:50%;background:var(--forest);color:white;font-size:.82rem;font-weight:850}
+    .point-name{font-size:.88rem;font-weight:750;overflow-wrap:anywhere}
+    .attribution-note{font-size:.77rem;color:var(--muted);margin:12px 2px 0}
+    .leaflet-div-icon{background:transparent;border:0}
+    .map-number{display:grid;place-items:center;width:30px;height:30px;border:2px solid white;border-radius:50%;background:#285b48;color:white;box-shadow:0 2px 8px #102f2660;font:800 14px/1 system-ui,-apple-system,"Segoe UI",sans-serif}
+    .leaflet-popup-content-wrapper{border-radius:10px}
+    @media(max-width:760px){main{padding-top:14px}header{display:block}.draft{margin-top:10px}.points{grid-template-columns:repeat(2,minmax(0,1fr))}#map{height:58vh;min-height:340px}.legend-head{display:block}.legend-head p{margin-top:4px}}
+    @media(max-width:390px){.point{padding:7px}.point-name{font-size:.8rem}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>Vorschau: Tumas auf der swisstopo-Karte</h1>
+      <p>Die nummerierten Punkte zeigen vorläufige Koordinaten. Tippe auf einen Punkt oder einen Namen, um ihn auf der Karte hervorzuheben.</p>
+    </div>
+    <span class="draft">Entwurf – bitte prüfen</span>
+  </header>
+  <div class="map-shell"><div id="map" role="application" aria-label="Karte mit nummerierten Standortvorschlägen für die zwölf Tumas"></div></div>
+  <section class="legend" aria-labelledby="legend-title">
+    <div class="legend-head"><h2 id="legend-title">Nummern und Tuma-Namen</h2><p>Die Nummerierung folgt deiner Lösungsliste.</p></div>
+    <div id="points" class="points"></div>
+  </section>
+  <p class="attribution-note">Kartengrundlage: © swisstopo. Die Punkte sind Koordinatenkandidaten aus einer öffentlichen Ortsliste und dienen hier nur zur Sichtprüfung.</p>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const locations = [
+  {n:1,name:'Tuma Platta',lat:46.83425,lon:9.44274},
+  {n:2,name:'Tuma Tschelle',lat:46.83213,lon:9.4482},
+  {n:3,name:'Tuma Casté',lat:46.83539,lon:9.44773},
+  {n:4,name:'Tuma Turera',lat:46.83733,lon:9.45064},
+  {n:5,name:'Tuma Marchesa',lat:46.8296,lon:9.4483},
+  {n:6,name:'Tuma Falveng',lat:46.8312,lon:9.4536},
+  {n:7,name:'Tuma Padrusa',lat:46.83384,lon:9.43951},
+  {n:8,name:'Tuma Carpusa',lat:46.83094,lon:9.43804},
+  {n:9,name:'Tum’Arsa',lat:46.8247,lon:9.4404},
+  {n:10,name:'Tuma Varsera',lat:46.82366,lon:9.44389},
+  {n:11,name:'Tuma Lunga',lat:46.824,lon:9.4368},
+  {n:12,name:'Tuma Calchera',lat:46.8228,lon:9.4332}
+];
+const map = L.map('map', {scrollWheelZoom:false});
+L.tileLayer('https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg', {
+  minZoom:8,maxZoom:18,attribution:'© <a href="https://www.swisstopo.admin.ch/" target="_blank" rel="noreferrer">swisstopo</a>'
+}).addTo(map);
+const markers = new Map();
+const list = document.getElementById('points');
+function selectPoint(location){
+  document.querySelectorAll('.point').forEach(button=>button.classList.toggle('active',Number(button.dataset.point)===location.n));
+  const marker=markers.get(location.n);
+  map.flyTo(marker.getLatLng(),Math.max(map.getZoom(),16),{duration:.45});
+  marker.openPopup();
+}
+locations.forEach(location=>{
+  const icon=L.divIcon({className:'',html:'<span class="map-number">'+location.n+'</span>',iconSize:[30,30],iconAnchor:[15,15]});
+  const marker=L.marker([location.lat,location.lon],{icon,title:location.n+'. '+location.name}).addTo(map);
+  marker.bindPopup('<strong>'+location.n+'. '+location.name+'</strong><br><small>'+location.lat.toFixed(5)+', '+location.lon.toFixed(5)+'</small>');
+  markers.set(location.n,marker);
+  const button=document.createElement('button');
+  button.type='button';button.className='point';button.dataset.point=location.n;
+  button.innerHTML='<span class="num">'+location.n+'</span><span class="point-name"></span>';
+  button.querySelector('.point-name').textContent=location.name;
+  button.addEventListener('click',()=>selectPoint(location));
+  list.append(button);
+});
+map.fitBounds(L.featureGroup([...markers.values()]).getBounds().pad(.16));
+</script>
+</body>
+</html>
