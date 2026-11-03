@@ -4,7 +4,7 @@
 - `index.html`: Website
 - `style.css`, `task1.css` und `task2.css`: Gestaltung, responsive Aufgabenlayouts und Zuordnungsspiel
 - `app.js` und `data.js`: Interaktionen und Inhalte
-- `assets/`: Bilder und MP3-Hörbuch
+- `assets/`: Bilder, MP3-Hörbuch und die fünf schriftfreien Kacheln zur Entstehung der Tumas
 
 ## Lokal testen
 Öffne `index.html` im Browser. Für eine zuverlässigere lokale Vorschau kannst du im Projektordner einen lokalen Webserver starten, z. B. in VS Code mit der Erweiterung Live Server.
@@ -16,15 +16,10 @@
 4. Unter **Build and deployment** wählst du **Deploy from a branch**, danach `main` und `/ (root)`, und speicherst.
 5. Warte, bis GitHub Pages die Website veröffentlicht. Die URL erscheint auf der Pages-Seite.
 
-## Wichtige Hinweise zum Prototyp
-- Aufgabe 2 zeigt die romanischen Namen fest an. Die deutschen Bedeutungen lassen sich ziehen; auf Tablets funktioniert auch Antippen. Richtige Karten bleiben beim Namen, falsche springen zurück.
-- Aufgabe 1 zeigt die beiden Landschaftsbilder auf breiteren Bildschirmen nebeneinander und auf schmalen Displays untereinander.
-- Die Klickpositionen in Aufgabe 1 wurden anhand der nummerierten Kreise in `Tuma Lösungen neu.docx` gesetzt. Bitte die Zuordnung einmal im Browser prüfen; die Nummern 1–12 entsprechen der Namensliste auf Seite 3.
-- Aufgabe 1 markiert richtige Zuordnungen nach der Auswertung grün und gibt falsch zugeordnete Namen zum erneuten Versuch frei. Die bestätigten Kartenpunkte werden auf der Karte angetippt; die nächste Tuma-Position wird dabei automatisch zugeordnet.
-- Aufgabe 1 bietet zusätzlich eine schwierige Kartenstufe mit swisstopo-Karte. Die zwölf Standorte wurden anhand der nummerierten Vorschau geprüft. Für die Kartenansicht ist eine Internetverbindung nötig.
-- Die Beschriebe wurden aus dem bereitgestellten PDF übernommen und für die Darstellung leicht geglättet. Bitte fachliche Schreibweisen vor Veröffentlichung kontrollieren.
-- Zwei Schaubilder zur Entstehung sind in der Startseite eingebaut. Bitte ihre Beschriftungen und Reihenfolge noch mit dem Word-Dokument abgleichen.
+## Aufgabenfolge
+- **Aufgabe 1 – Entstehung der Tumas:** Zuerst ordnen die Schülerinnen und Schüler fünf schriftfreie Bildkacheln. Danach verbinden sie jede Bildkachel mit dem passenden separaten Text. Die Karten funktionieren durch Antippen.
+- **Aufgabe 2 – Tumas erkunden:** Infotexte zu den zwölf heutigen Tumas und zu den besonderen beziehungsweise historischen Tumas. Die Casté-Detailansicht enthält zusätzlich das YouTube-Video.
+- **Aufgabe 3 – Tumas auf Bildern und Karte finden:** Zuordnung auf zwei Bildern und auf der interaktiven swisstopo-Karte. Für die Kartenansicht ist eine Internetverbindung nötig.
+- **Aufgabe 4 – Romanische und deutsche Namen verbinden:** Bedeutungen ziehen oder auf Tablets antippen. Richtige Paare bleiben liegen, falsche springen zurück.
 
-- Aufgabe 3 enthält jetzt einen eigenen Abschnitt für Tuma Gion Goder sowie die abgetragenen Tumas Gletsch und Simanle.
-
-- Die Aufgabenreihenfolge ist: 1. Infotexte zu den Tumas, 2. Bilder- und Kartenzuordnung, 3. Namen und Bedeutungen verbinden.
+Die Aufgaben sind über die Startseite frei wählbar. Alle fünf verwendeten Bilder zur Entstehung liegen unter `assets/entstehung/`; ihre separate Textfassung ist in `data.js` hinterlegt.
