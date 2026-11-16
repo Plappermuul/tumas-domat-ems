@@ -45,3 +45,7 @@
 @media(max-width:599px){
   #photo-tasks{display:grid;grid-template-columns:1fr;gap:4px}
 }
+
+.origin-title-image{margin:16px 0 22px}
+.origin-title-image img{display:block;width:min(100%,920px);height:auto;max-height:480px;object-fit:contain;margin:0 auto;border-radius:16px;box-shadow:0 8px 24px #183d3218}
+
